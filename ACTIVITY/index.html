@@ -8,17 +8,122 @@
 </head>
 <body>
 <div class="bg"></div>
-<main class="app">
-  <div class="logo">CALCULATOR</div>
-  <div class="display"><div id="expr"></div><div id="cur">0</div></div>
-  <div class="grid" id="pad">
-    <button class="fn" data-k="AC">AC</button><button class="fn" data-k="±">±</button><button class="fn" data-k="%">%</button><button class="op" data-k="÷">÷</button>
-    <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button class="op" data-k="×">×</button>
-    <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button class="op" data-k="−">−</button>
-    <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button class="op" data-k="+">+</button>
-    <button class="zero" data-k="0">0</button><button data-k=".">.</button><button class="op" data-k="=">=</button>
+
+<main class="app" id="app">
+  <header class="topbar">
+    <span class="brand" id="brand">Calculator</span>
+    <span class="dot"></span>
+  </header>
+
+  <div class="views">
+    <!-- ============ CALCULATOR VIEW ============ -->
+    <section class="view active" id="viewCal" aria-label="Calculator">
+      <div class="display">
+        <div id="expr"></div>
+        <div id="cur">0</div>
+      </div>
+      <div class="grid" id="pad">
+        <button class="key fn" data-k="AC">AC</button>
+        <button class="key fn" data-k="±">±</button>
+        <button class="key fn" data-k="%">%</button>
+        <button class="key op" data-k="÷">÷</button>
+
+        <button class="key" data-k="7">7</button>
+        <button class="key" data-k="8">8</button>
+        <button class="key" data-k="9">9</button>
+        <button class="key op" data-k="×">×</button>
+
+        <button class="key" data-k="4">4</button>
+        <button class="key" data-k="5">5</button>
+        <button class="key" data-k="6">6</button>
+        <button class="key op" data-k="−">−</button>
+
+        <button class="key" data-k="1">1</button>
+        <button class="key" data-k="2">2</button>
+        <button class="key" data-k="3">3</button>
+        <button class="key op" data-k="+">+</button>
+
+        <button class="key zero" data-k="0">0</button>
+        <button class="key" data-k=".">.</button>
+        <button class="key eq" data-k="=">=</button>
+      </div>
+    </section>
+
+    <!-- ============ BMI VIEW ============ -->
+    <section class="view" id="viewBmi" aria-label="BMI Calculator">
+      <div class="seg" id="genSeg" role="group" aria-label="Gender">
+        <button type="button" class="on" data-gender="male">Male</button>
+        <button type="button" data-gender="female">Female</button>
+      </div>
+
+      <div class="fields">
+        <label class="field">
+          <span id="lblW">Weight (kg)</span>
+          <input id="bmiW" type="number" inputmode="decimal" min="1" step="0.1" placeholder="e.g. 60">
+        </label>
+        <div class="field-row" id="heightRow">
+          <label class="field">
+            <span id="lblH">Height (cm)</span>
+            <input id="bmiH" type="number" inputmode="decimal" min="1" step="0.1" placeholder="e.g. 165">
+          </label>
+        </div>
+      </div>
+
+      <button class="compute" id="bmiGo" type="button">Compute BMI</button>
+      <div class="bmi-err" id="bmiErr" hidden></div>
+
+      <div class="result" id="bmiRes" hidden>
+        <svg class="gauge" viewBox="0 0 200 115" aria-hidden="true">
+          <g id="gaugeArcs"></g>
+          <g id="needle" class="needle">
+            <line x1="100" y1="100" x2="30" y2="100"></line>
+          </g>
+          <circle cx="100" cy="100" r="7" class="hub"></circle>
+        </svg>
+        <div class="bmi-val" id="bmiVal">0</div>
+        <div class="bmi-cat" id="bmiCat"></div>
+        <div class="bmi-msg" id="bmiMsg"></div>
+        <div class="range" id="bmiRange"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+
+      <p class="note">For guidance only. Not a substitute for medical advice.</p>
+    </section>
   </div>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <nav class="tabbar" aria-label="Mode">
+    <button class="tab on" id="tabCal" data-tab="cal" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><rect x="8" y="6" width="8" height="3.5" rx="0.8"/><circle cx="9" cy="13" r="1"/><circle cx="12" cy="13" r="1"/><circle cx="15" cy="13" r="1"/><circle cx="9" cy="17" r="1"/><circle cx="12" cy="17" r="1"/><circle cx="15" cy="17" r="1"/></svg>
+      <span>Cal</span>
+    </button>
+    <button class="tab" id="tabBmi" data-tab="bmi" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M8.5 11a4 4 0 0 1 7 0"/><path d="M12 11l1.8-2"/></svg>
+      <span>BMI</span>
+    </button>
+  </nav>
+
+  <!-- ============ HIDDEN VAULT (open with secret code + =) ============ -->
+  <section class="vault" id="vault" hidden aria-label="Vault">
+    <div class="v-head">
+      <div class="v-title">Vault<span id="vCount"></span></div>
+      <button class="v-btn" id="vLock" type="button">Lock</button>
+    </div>
+    <div class="v-grid" id="vGrid"></div>
+    <div class="v-empty" id="vEmpty">No photos or videos yet. Tap the button below to add some.</div>
+    <label class="v-add">+ Add photos / videos
+      <input type="file" id="vFile" accept="image/*,video/*" multiple hidden>
+    </label>
+    <div class="v-view" id="vView" hidden>
+      <div class="v-view-bar">
+        <button id="vClose" type="button">Close</button>
+        <button id="vDel" type="button">Delete</button>
+      </div>
+      <div class="v-view-body" id="vViewBody"></div>
+    </div>
+  </section>
 </main>
+
 <script src="calcu.js"></script>
 </body>
 </html>
